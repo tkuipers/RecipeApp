@@ -8,6 +8,8 @@ class Recipe {
     this.host,
     this.yields,
     this.notes,
+    this.rating,
+    this.favourite,
     this.ingredientsList,
     this.instructionsList,
   );
@@ -20,6 +22,8 @@ class Recipe {
   String host;
   String yields;
   String notes;
+  double? rating;
+  bool? favourite;
   List<String> ingredientsList;
   List<String> instructionsList;
 
@@ -32,6 +36,8 @@ class Recipe {
         json["host"],
         json["yields"],
         json["notes"],
+        json['rating'],
+        json['favourite'],
         List<String>.from(json["ingredients_list"].map((x) => x)),
         List<String>.from(json["instructions_list"].map((x) => x)),
       );
@@ -45,7 +51,22 @@ class Recipe {
         "host": host,
         "yields": yields,
         "notes": notes,
+        "rating": rating,
+        "favourite": favourite,
         "ingredients_list": List<dynamic>.from(ingredientsList.map((x) => x)),
         "instructions_list": List<dynamic>.from(instructionsList.map((x) => x)),
+      };
+}
+
+class NewRecipeDTO {
+  Uri recipeUrl;
+
+  NewRecipeDTO(this.recipeUrl);
+
+  factory NewRecipeDTO.fromJson(Map<String, dynamic> json) =>
+      NewRecipeDTO(json["recipe_url"]);
+
+  Map<String, dynamic> toJson() => {
+        "recipe_url": recipeUrl.toString(),
       };
 }
