@@ -7,8 +7,7 @@ import 'dart:convert';
 
 class RecipesRepo {
   static Future<List<Recipe>> fetchAllRecipes() async {
-    var response =
-        await http.get(Uri.parse('http://192.168.178.146:8000/recipes'));
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/recipes'));
     if (response.statusCode == 200) {
       Iterable l = json.decode(response.body);
       List<Recipe> recipes =
@@ -21,7 +20,7 @@ class RecipesRepo {
 
   static Future<Recipe> add(NewRecipeDTO recipe) async {
     final client = HttpClient();
-    var uri = Uri.parse("http://192.168.178.146:8000/recipes/");
+    var uri = Uri.parse("http://127.0.0.1:8000/recipes/");
     var request = await client.postUrl(uri);
     request.followRedirects = true;
     request.write(json.encode(recipe.toJson()));
@@ -38,7 +37,7 @@ class RecipesRepo {
 
   static Future<Recipe> getRecipe(int id) async {
     var response =
-        await http.get(Uri.parse('http://192.168.178.146:8000/recipes/$id'));
+        await http.get(Uri.parse('http://127.0.0.1:8000/recipes/$id'));
     if (response.statusCode == 200) {
       return Recipe.fromJson(json.decode(response.body));
     } else {
@@ -47,8 +46,8 @@ class RecipesRepo {
   }
 
   static Future<void> delete(Recipe r) async {
-    var response = await http
-        .delete(Uri.parse('http://192.168.178.146:8000/recipes/${r.id}'));
+    var response =
+        await http.delete(Uri.parse('http://127.0.0.1:8000/recipes/${r.id}'));
     if (response.statusCode != 200) {
       throw Exception('Failed to load recipes');
     }
@@ -56,7 +55,7 @@ class RecipesRepo {
 
   static Future<Recipe> update(Recipe r) async {
     var response = await http.patch(
-        Uri.parse('http://192.168.178.146:8000/recipes/${r.id}'),
+        Uri.parse('http://127.0.0.1:8000/recipes/${r.id}'),
         body: r.toJson());
     if (response.statusCode == 200) {
       return Recipe.fromJson(json.decode(response.body));
