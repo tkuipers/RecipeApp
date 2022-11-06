@@ -34,12 +34,12 @@ class _AddRecipeState extends State<AddRecipeDialogue> {
                   textAlign: TextAlign.center,
                   autofocus: true,
                   controller: controller);
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
             }
-
-            // By default, show a loading spinner.
-            return const CupertinoActivityIndicator();
+            controller.text = "";
+            return CupertinoTextField(
+                textAlign: TextAlign.center,
+                autofocus: true,
+                controller: controller);
           },
         ),
         CupertinoDialogAction(

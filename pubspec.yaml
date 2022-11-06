@@ -40,6 +40,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   http: ^0.13.5
   cupertino_listview: ^2.0.0
+  flutter_launcher_icons: ^0.10.0
   
 
 dev_dependencies:
