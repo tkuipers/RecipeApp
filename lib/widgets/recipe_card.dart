@@ -137,10 +137,11 @@ class RecipeCard extends StatelessWidget {
     );
   }
 
-  Future<dynamic> showRecipeDetails(BuildContext context) {
+  Future<dynamic> showRecipeDetails(BuildContext context) async {
+    var r = await RecipesRepo.getRecipe(recipe.id);
     return Navigator.push(
       context,
-      CupertinoPageRoute(builder: (context) => RecipeDetails(recipe: recipe)),
+      CupertinoPageRoute(builder: (context) => RecipeDetails(recipe: r)),
     );
   }
 }

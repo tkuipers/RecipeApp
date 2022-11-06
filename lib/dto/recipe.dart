@@ -43,16 +43,16 @@ class Recipe {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "url": url,
-        "title": title,
-        "total_time": totalTime,
-        "image_url": imageUrl,
-        "host": host,
-        "yields": yields,
-        "notes": notes,
-        "rating": rating,
-        "favourite": favourite,
+        "id": id.toString(),
+        "url": url.toString(),
+        "title": title.toString(),
+        "total_time": totalTime.toString(),
+        "image_url": imageUrl.toString(),
+        "host": host.toString(),
+        "yields": yields.toString(),
+        "notes": notes.toString(),
+        "rating": rating.toString(),
+        "favourite": favourite.toString(),
         "ingredients_list": List<dynamic>.from(ingredientsList.map((x) => x)),
         "instructions_list": List<dynamic>.from(instructionsList.map((x) => x)),
       };

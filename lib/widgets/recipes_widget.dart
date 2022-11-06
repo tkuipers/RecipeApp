@@ -1,11 +1,11 @@
 // import 'package:cupertino_listview/cupertino_listview.dart';
+import 'package:cupertino_listview/cupertino_listview.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/cupertino/list_view.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:recipe_app/dto/recipe.dart';
+import 'package:recipe_app/repository/recipes_repository.dart';
 import 'package:recipe_app/styles.dart';
-import 'package:recipe_app/widgets/recipe_card.dart';
 import 'package:recipe_app/widgets/subwidgets/editable_text.dart';
 
 class RecipeDetails extends StatelessWidget {
@@ -20,55 +20,106 @@ class RecipeDetails extends StatelessWidget {
           children: [
             Expanded(flex: 1, child: _TopPortion(imageUrl: recipe.imageUrl)),
             Expanded(
-                flex: 1,
-                child: CupertinoListView
-                // child: CupertinoListView.builder(
-                //   sectionCount: 2,
-                //   padding: const EdgeInsets.all(8.0),
-                //   sectionBuilder: (context, sectionPath, isFloating) {
-                //     switch (sectionPath.section) {
-                //       case 0:
-                //         return Container(
-                //             height: 90,
-                //             constraints: BoxConstraints(minHeight: 100),
-                //             child: CupertinoTextField(
-                //               controller:
-                //                   TextEditingController(text: "Ingredients"),
-                //               textAlign: TextAlign.center,
-                //               style: const TextStyle(fontSize: 25),
-                //               // cursorHeight: 45,
-                //               // maxLines: 4,
-                //             ));
-                //       case 1:
-                //       default:
-                //         return const Text(
-                //           "Instructions",
-                //           textScaleFactor: 1.5,
-                //           textAlign: TextAlign.center,
-                //         );
-                //     }
-                //   },
-                //   childBuilder: (BuildContext context, IndexPath index) {
-                //     switch (index.section) {
-                //       case 0:
-                //         return RecipeAppEditableText(
-                //             text: recipe.ingredientsList[index.child]);
-                //       case 1:
-                //       default:
-                //         return RecipeAppEditableText(
-                //             text: recipe.instructionsList[index.child]);
-                //     }
-                //   },
-                //   itemInSectionCount: (int section) {
-                //     switch (section) {
-                //       case 0:
-                //         return recipe.ingredientsList.length;
-                //       case 1:
-                //       default:
-                //         return recipe.instructionsList.length;
-                //     }
-                //   },
-                // ))
+                flex: 0,
+                child: RatingBar.builder(
+                    initialRating: recipe.rating ?? 0,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+                    itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Styles.primaryButtonColor,
+                        ),
+                    onRatingUpdate: (rating) {
+                      recipe.rating = rating;
+                      RecipesRepo.update(recipe);
+                    },
+                    itemSize: 30)),
+            Expanded(
+                flex: 2,
+                child: CupertinoListView.builder(
+                  sectionCount: 3,
+                  padding: const EdgeInsets.all(8.0),
+                  sectionBuilder: (context, sectionPath, isFloating) {
+                    switch (sectionPath.section) {
+                      case 0:
+                        return Container(
+                            child: CupertinoTextField(
+                          controller:
+                              TextEditingController(text: "Ingredients"),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ));
+                      case 1:
+                        return Container(
+                            child: CupertinoTextField(
+                          controller:
+                              TextEditingController(text: "Instructions"),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                          // cursorHeight: 45,
+                          // maxLines: 4,
+                        ));
+                      case 2:
+                      default:
+                        return Container(
+                            child: CupertinoTextField(
+                          controller: TextEditingController(text: "Notes"),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                          // cursorHeight: 45,
+                          // maxLines: 4,
+                        ));
+                    }
+                  },
+                  childBuilder: (BuildContext context, IndexPath index) {
+                    switch (index.section) {
+                      case 0:
+                        return RecipeAppEditableText(
+                            text: recipe.ingredientsList[index.child],
+                            onChange: (updated) {
+                              recipe.ingredientsList[index.child] = updated;
+                              RecipesRepo.update(recipe);
+                            });
+                      case 1:
+                        return RecipeAppEditableText(
+                            text: recipe.instructionsList[index.child],
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 30,
+                            onChange: (updated) {
+                              recipe.instructionsList[index.child] = updated;
+                              RecipesRepo.update(recipe);
+                            });
+                      case 2:
+                      default:
+                        return RecipeAppEditableText(
+                            text: recipe.notes,
+                            minLines: 10,
+                            maxLines: 50,
+                            keyboardType: TextInputType.multiline,
+                            onChange: (updated) {
+                              recipe.notes = updated;
+                              RecipesRepo.update(recipe);
+                            });
+                    }
+                  },
+                  itemInSectionCount: (int section) {
+                    switch (section) {
+                      case 0:
+                        return recipe.ingredientsList.length;
+                      case 1:
+                        return recipe.instructionsList.length;
+                      case 2:
+                      default:
+                        return 1;
+                    }
+                  },
+                ))
           ],
         )
         //
